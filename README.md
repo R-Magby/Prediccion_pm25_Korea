@@ -20,15 +20,15 @@ La dispersión y concentración de contaminantes como el $PM_{2.5}$ son fenómen
 ## 2. Tecnologías y Librerías Utilizadas
 El proyecto se ha desarrollado íntegramente en Python utilizando el ecosistema estándar para computación científica y aprendizaje automático:
 *   **Procesamiento y Base de Datos:** `pandas`, `numpy`, `sqlite3`
-*   **Meteorología y Series Temporales:** `statsmodels.tsa.seasonal` (seasonal decompose), `scipy.fftpack` (análisis espectral de Fourier)
-*   **Visualización Científica:** `matplotlib.pyplot`, `seaborn`
-*   **Machine Learning:** `scikit-learn` (Random Forest, GridSearchCV, TimeSeriesSplit, preprocessing)
+*   **Estadistica y Series Temporales:** `statsmodels.tsa.seasonal` (seasonal decompose), `scipy.fftpack` (análisis espectral de Fourier)
+*   **Visualización:** `matplotlib.pyplot`, `seaborn`
+*   **Machine Learning:** `scikit-learn` (Random Forest, GridSearchCV, TimeSeriesSplit, preprocessing), `mord` (LogisticAT)
 *   **Gradient Boosting:** `xgboost` (XGBClassifier)
 ---
 ## 3. Estructura y Secciones del Notebook
 ### 3.1. Query
 *   Carga de datos crudos desde una base de datos SQLite (`database.db`).
-*   Cruces e integración (*inner joins*) entre la tabla de calidad de aire (`fact_pollution`) y la tabla de meteorología (`dim_weather`) agregada diariamente por estación (calculando valores máximos y mínimos de temperatura, presión, velocidad del viento, etc., para reducir la colinealidad).
+*   Cruces e integración (*inner joins*) entre la tabla de calidad de aire (`fact_pollution`) y la tabla de meteorología (`dim_weather`) agregada diariamente por estación (calculando valores máximos y mínimos de temperatura, presión, velocidad del viento, etc.).
 ### 3.2. EDA (Análisis Exploratorio de Datos)
 *   Análisis de tendencias temporales mediante descomposición estacional y cálculo de medias móviles (ventana de 30 días para anular ruido de alta frecuencia).
 *   Visualización de correlaciones lineales y no lineales (Pearson & Spearman) mediante mapas de calor. Se constató la multicolinealidad entre temperaturas y presiones, así como la débil correlación lineal individual de los parámetros meteorológicos aislados con el $PM_{2.5}$.
@@ -37,13 +37,13 @@ El proyecto se ha desarrollado íntegramente en Python utilizando el ecosistema 
 *   **Codificación y Balanceo:** Agrupación de clases (fusión del nivel crítico `Emergencia` con `Preemergencia`) debido a la escasez de muestras en condiciones extremas.
 *   **Normalización:** Escalamiento de características numéricas mediante `MinMaxScaler`.
 ### 3.4. Machine Learning (V1 - Baselines)
-Construcción de los primeros modelos de clasificación sin transformaciones complejas.
+Construcción de los primeros modelos de clasificación sin transformaciones complejas. Evaluación inicial del clasificador en validación cruzada:
 *   **Random Forest:**
-    *   **Seoul:** Evaluación inicial del clasificador en validación cruzada obteniendo Kappa cuadrático de **~0.697**.
-    *   **Cheongju:** Entrenamiento y ajuste en paralelo del clasificador para las condiciones atmosféricas específicas de esta ciudad.
+    *   **Seoul:**  Kappa cuadrático de **~0.697**.
+    *   **Cheongju:** Kappa cuadrático de ****
 ### 3.5. Feature Engineering & Modelos Avanzados (V2)
 Aplicación de transformaciones no lineales basadas en la distribución física de las variables:
-*   **Transformaciones:** Aplicación de logaritmos a gases altamente asimétricos (`so2`, `pm10`), elevación al cubo para la distancia del viento (`Distance_max`) y potenciación de `no2`.
+*   **Transformaciones:** Aplicación de logaritmos a gases altamente asimétricos (`so2`, `pm10`), elevación al cubo para la distancia del viento (`Distance_max`) y al cuadrado la variable `no2`, esto para mejorar la linealidad y disminuir la dispersion.
 *   **Random Forest V2:**
     *   **Seoul:** Score de validación mejorado a **~0.725** tras el ajuste de hiperparámetros con división temporal.
     *   **Cheongju:** Obtención de matrices de confusión balanceadas en las predicciones.
@@ -56,7 +56,7 @@ Para evolucionar este proyecto piloto a una solución robusta y de nivel industr
 ### Metas Técnicas (Modelo Funcional)
 *   **Superar el Score Kappa de 0.80:**
     *   Transformar la dirección del viento a componentes cartesianos ($U$ y $V$) para modelar de manera realista la advección física de la contaminación.
-    *   Incorporar indicadores de inversión térmica (diferenciales de temperatura y calma de viento).
+    *   Estudiar y aplicar tecnicas de modelos enfocaados en datos ordinales.
     *   Optimizar los umbrales de decisión mediante regresión y algoritmos de optimización de umbrales sobre el set de validación.
 *   **Nuevas Fuentes de Datos:** Incorporar densidad poblacional, volumen de tráfico vehicular y días festivos para capturar el factor de emisión de origen antrópico.
 ### Industrialización (MLOps y Producción)
