@@ -39,17 +39,18 @@ El proyecto se ha desarrollado íntegramente en Python utilizando el ecosistema 
 ### 3.4. Machine Learning (V1 - Baselines)
 Construcción de los primeros modelos de clasificación sin transformaciones complejas. Evaluación inicial del clasificador en validación cruzada:
 *   **Random Forest:**
-    *   **Seoul:**  Kappa cuadrático de **~0.697**.
-    *   **Cheongju:** Kappa cuadrático de ****
+    *   **Seoul:**  Kappa cuadrático de **~0.604**.
+    *   **Cheongju:** Kappa cuadrático de **~0.644**
 ### 3.5. Feature Engineering & Modelos Avanzados (V2)
 Aplicación de transformaciones no lineales basadas en la distribución física de las variables:
 *   **Transformaciones:** Aplicación de logaritmos a gases altamente asimétricos (`so2`, `pm10`), elevación al cubo para la distancia del viento (`Distance_max`) y al cuadrado la variable `no2`, esto para mejorar la linealidad y disminuir la dispersion.
 *   **Random Forest V2:**
-    *   **Seoul:** Score de validación mejorado a **~0.725** tras el ajuste de hiperparámetros con división temporal.
-    *   **Cheongju:** Obtención de matrices de confusión balanceadas en las predicciones.
+    *   **Seoul:** Score de validación mejorado a **~0.664** tras el ajuste de hiperparámetros con división temporal.
+
 *   **XGBoost:**
-    *   **Seoul:** Modelo optimizado mediante regularización con un score Kappa de **~0.718**.
-    *   **Cheongju:** Ajuste de hiperparámetros con un excelente balance de precisión en las categorías minoritarias.
+    *   **Seoul:** Modelo optimizado mediante regularización con un score Kappa de **~0.656**.
+*   **LogisticAT:**
+    *   **Seoul:** Modelo enfocado en datos ordinales, Kappa de Cohen de **~0.754**
 ---
 ## 4. Tareas Pendientes y Metas Futuras
 Para evolucionar este proyecto piloto a una solución robusta y de nivel industrial, se han establecido las siguientes metas:
